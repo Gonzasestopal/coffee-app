@@ -115,7 +115,7 @@ export default {
                 return this.formData.origin;
             } else if (this.formData.drink == 'filtrado') {
                 return this.formData.origin && this.size;
-            } else if (['latte','capuccino'].includes(this.formData.drink)) {
+            } else if (['latte','cappuccino'].includes(this.formData.drink)) {
                 return this.formData.origin && this.size && this.formData.milk;
             }
             return false
@@ -140,7 +140,6 @@ export default {
             return ["cappuccino", "latte", "filtrado"].includes(this.formData.drink)
         },
         calculateTotal: function () {
-            console.log('omg', this.formData.drink)
             return prices[this.formData.drink]  + Number(this.formData.tip) || 0
         },
     },

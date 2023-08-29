@@ -1,5 +1,7 @@
 # coffee-app
 
+Available at https://gonzasestopal.github.io/coffee-app
+
 ## Project setup
 ```
 npm install
