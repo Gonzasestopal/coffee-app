@@ -1,86 +1,73 @@
 <template>
     <form @submit.prevent="submitForm">
+        <LocaleSelect></LocaleSelect>
         <div class="form-row">
             <div class="form-field">
-                <label for="drink">Bebida</label>
+                <label for="drink">{{ $t("drink") }}</label>
                 <select v-model="formData.drink" name="drink" required>
-                    <option disabled selected value="">Selecciona una opcion</option>
-                    <option value="latte">Latte</option>
-                    <option value="espresso">Espresso</option>
-                    <option value="filtrado">Filtrado</option>
-                    <option value="cappuccino">Capuccino</option>
+                    <option disabled selected value="">{{ $t("select") }}</option>
+                    <option :key="drink" :value="drink.toLowerCase()" v-for="drink in drinks">{{ drink }}</option>
+                    <option value="filtrado">{{ $t("filter") }}</option>
                 </select>
             </div>
         </div>
         <div v-show="formData.drink" class="form-row">
             <div class="form-field">
-                <label for="origin">Origen</label>
+                <label for="origin">{{ $t("origin") }}</label>
                 <select v-model="formData.origin" name="origin">
-                    <option disabled selected value="">Selecciona una opcion</option>
-                    <option value="etiopia">Etiopia</option>
-                    <option value="guatemala">Guatemala</option>
-                    <option value="chiapas">Chiapas</option>
+                    <option disabled selected value="">{{ $t("select") }}</option>
+                    <option :key="origin" :value="origin.toLowerCase()" v-for="origin in origins">{{ origin }}</option>
                 </select>
             </div>
         </div>
         <div v-show="toggleMilk" class="form-row">
             <div class="form-field">
-                <label for="milk">Tipo de leche</label>
+                <label for="milk">{{ $t("milkType") }}</label>
                 <select v-model="formData.milk" name="milk">
-                    <option disabled selected value="">Selecciona una opcion</option>
-                    <option value="whole">Whole</option>
-                    <option value="skimmed">Skimmed</option>
-                    <option value="almonds">Almonds</option>
+                    <option disabled selected value="">{{ $t("select") }}</option>
+                    <option :key="milkType" :value="milkType.toLowerCase()" v-for="milkType in milkTypes">{{ $t(milkType.toLowerCase()) }}</option>
                 </select>
             </div>
         </div>
         <div v-show="toggleSize" class="form-row">
             <div class="form-field">
-                <label for="size">Tamaño</label>
-                <select v-model="size" name="size">
-                    <option disabled selected value="">Selecciona una opcion</option>
-                    <option value="venti">Venti</option>
-                    <option value="grande">Grande</option>
-                    <option value="alto">Alto</option>
+                <label for="size">{{ $t("size")}}</label>
+                <select v-model="formData.size" name="size">
+                    <option disabled selected value="">{{ $t("select") }}</option>
+                    <option :key="size" :value="size.toLowerCase()" v-for="size in sizes">{{ size }}</option>
+
                 </select>
             </div>
         </div>
         <div class="form-row">
             <div class="form-field">
-                <textarea v-model.trim="formData.comment" name="comment" placeholder="Alguna peticion adicional"></textarea>
+                <textarea v-model.trim="formData.comment" name="comment" v-bind:placeholder="$t('request')"></textarea>
             </div>
         </div>
 
         <TipInput v-on:set-child-data="updateParent"></TipInput>
 
-        <p for="">Tu total es de $ {{ calculateTotal }}</p>
+        <p for="">{{ $t('total') }} ${{ calculateTotal }}</p>
 
         <input v-bind:style="{ 'background-color': submitBackgroundColor, 'color': submitColor }" type="submit"
-            v-bind:disabled="!formIsValid" value="Order">
+            v-bind:disabled="!formIsValid" :value="$t('submit')">
     </form>
 </template>
 
-<style scoped>
-label {
-    color: red
-}
-</style>
-
 <script>
 import TipInput from './TipInput.vue'
-
-const prices = {
-    latte: 3,
-    cappuccino: 4,
-    filtrado: 2,
-    espresso: 2,
-}
-
+import LocaleSelect from './LocaleSelect.vue';
+import prices from '../domain/prices';
+import origins from '../domain/origins';
+import drinks from '../domain/drinks';
+import milkTypes from '../domain/milkTypes';
+import sizes from '../domain/sizes';
 
 export default {
     name: 'CoffeeForm',
     components: {
         TipInput,
+        LocaleSelect,
     },
     data: function () {
         return {
@@ -91,8 +78,13 @@ export default {
                 milk: '',
                 sabor: '',
                 tip: '',
+                size: '',
             },
             formDataCopy: '',
+            origins: origins,
+            drinks: drinks,
+            milkTypes: milkTypes,
+            sizes: sizes,
         }
     },
     mounted: function() {
@@ -104,10 +96,10 @@ export default {
                 if (this.formData.origin == 'guatemala') {
                     return 'venti'
                 }
-                return ''
+                return this.formData.size;
             },
             set: function(value) {
-                return value
+                this.size = value;
             }
         },
         formIsValid: function () {
@@ -157,3 +149,37 @@ export default {
     }
 }
 </script>
+
+
+<i18n>
+{
+    "en": {
+        "total": "Your total is",
+        "select": "Select one option",
+        "request": "Please add any additional requests here",
+        "size": "Select your coffee size",
+        "drink": "Select your favourite beverage",
+        "milkType": "Select your milk type",
+        "origin": "Select your coffee origin",
+        "submit": "Submit order",
+        "filter": "Drip coffee",
+        "almonds": "Alomnds",
+        "whole": "Whole",
+        "skimmed": "Skimmed"
+    },
+    "es": {
+        "total": "Tu total es de",
+        "select": "Selecciona una opcion",
+        "request": "Por favor escribe aqui si tienes alguna peticion adicional",
+        "size": "Selecciona el tamaño de tu bebida",
+        "drink": "Selecciona tu bebida favorita",
+        "milkType": "Selecciona tu tipo de bebida",
+        "origin": "Selecciona el origen de tu cafe",
+        "submit": "Realizar pedido",
+        "filter": "Filtrado",
+        "almonds": "Almendras",
+        "whole": "Entera",
+        "skimmed": "Deslactosada"
+    }
+}
+</i18n>

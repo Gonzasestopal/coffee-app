@@ -1,8 +1,19 @@
+<i18n>
+{
+    "en": {
+        "tip": "Do you wanna leave a tip?"
+    },
+    "es": {
+        "tip": "¿Quieres dejar propina?"
+    }
+}
+</i18n>
+
 <template>
     <div class="form-row">
         <div class="form-field">
-            <label for="tip">Do you wanna add tip?</label>
-            <input type="text" name="tip" :value="tip" @input="setChildData"/>
+            <label for="tip">{{ $t('tip') }}</label>
+            <input type="text" name="tip" :value="tip" @input="setChildData" />
         </div>
     </div>
 </template>
@@ -11,13 +22,13 @@
 
 export default {
     name: 'TipInput',
-    data: function() {
+    data: function () {
         return {
-            tip: ''
+            tip: '',
         }
     },
     methods: {
-        setChildData: function(e) {
+        setChildData: function (e) {
             this.$emit('set-child-data', e.data)
             this.tip = e.data;
         }
